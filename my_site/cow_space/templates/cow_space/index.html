@@ -1,40 +1,30 @@
-{% extends 'base.html' %}
+{% extends 'base2.html' %}
 {% block content %}
-<div class="container">
-    <h1>Welcome to Co-Working Space</h1>
-    <div class="row text-center" style="margin:20px;">
-       <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
-           <div class="col" style="background-color:blue; padding:20px">Check In
-               <div class="border-top my-2"></div>
-               <div class="col" style="background-color:white; margin-top:20px"> Member ID</div>
-               <div class="col" style="background-color:white; margin-top:20px"> Zone</div>
-               <input class="btn btn-success" style="margin-top:20px" type="submit" value="Check In">
-           </div>
-           <div class="col" style="background-color:red; padding:20px; margin-top:20px;">Check Out
-               <div class="border-top my-2"></div>
-               <div class="col" style="background-color:white; margin-top:20px"> Member ID</div>
-               <div class="col" style="background-color:white; margin-top:20px"> Money Left</div>
-               <input class="btn btn-primary" style="margin-top:20px" type="submit" value="Check Out">
-           </div>
-       </div>
-       <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4" style="background-color:green; padding:20px">Search
-           <div class="border-top my-2"></div>
-           <div class="row" style="margin-top:20px">
-               <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
-               <input class="form-control" type="text" name="member" id="member" placeholder="Member ID">
-               </div>
-               <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
-               <input class="btn btn-primary" type="submit" value="Check Out">
-               </div>
+    
+        <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8 text-center p-4">
+            <div class="col bg-primary p-4">Check In
+                <div class="border-top my-2"></div>
+                <div class="col mt-3 bg-light">
+                    {% if error %}{{error}}
+                    {% else %}ID: {{member_id}}
+                    {% endif %}</div>
+                <div class="col mt-3 bg-light"> Zone</div>
+                <input class="btn btn-success mt-3" type="submit" value="Check In">
             </div>
-            <div class="row">
-                <input class="form-control text-center" style="margin-top:20px" type="text" name="member" id="member" placeholder="Money">
-           </div>
-           <div class="row">
-                <input class="form-control text-center" style="margin-top:20px" type="text" name="member" id="member" placeholder="Log">
-           </div>
+            <div class="col mt-4 p-3 bg-danger">Check Out
+                <div class="border-top my-2"></div>
+                <div class="col mt-3 bg-light">
+                    {% if error %}{{error}}
+                    {% else %}ID: {{member_id}}
+                    {% endif %}</div>
+                <div class="col mt-3 bg-light">
+                    {% if member %}Money left: {{member.money}} ฿
+                    {% else %}Money
+                    {% endif %}
+                </div>
+                <input class="btn btn-primary" style="margin-top:20px" type="submit" value="Check Out">
+            </div>
+        </div>
 
-       </div>
-    </div>
-</div>
+
 {% endblock content %}

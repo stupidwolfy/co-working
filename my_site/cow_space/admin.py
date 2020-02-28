@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.contrib.auth.models import Permission
 from cow_space.models import Member, SeatBooking, TopupLog, Zone
 
 
@@ -19,7 +20,7 @@ class TopupLogAdmin(admin.ModelAdmin):
 
 
 class UserAdmin(admin.ModelAdmin):
-    list_display = ['id', 'username', 'password', 'first_name' ,]
+    list_display = ['id', 'username', 'password', 'first_name', ]
     extra = 1
 
 
@@ -29,10 +30,12 @@ class ZoneAdmin(admin.ModelAdmin):
 
 
 # Register your models here.
-#admin.site.unregister(User)
+# admin.site.unregister(User)
+
+admin.site.register(Permission)
+
 
 admin.site.register(Member, MemberAdmin)
 admin.site.register(SeatBooking)
 admin.site.register(TopupLog)
 admin.site.register(Zone)
-

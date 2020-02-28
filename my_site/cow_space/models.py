@@ -8,7 +8,13 @@ class Member(models.Model):
     money = models.FloatField(max_length=20)
 
 class Zone(models.Model):
-    title = models.CharField(max_length=50)
+    zone_type = (
+        ('GR', 'Green Zone'),
+        ('GO', 'Gold Zone'),
+        ('PR', 'Private Zone')
+    )
+
+    title = models.CharField(max_length=50, choices=zone_type)
     description = models.CharField(max_length=200)
     price = models.FloatField(max_length=10)
 
