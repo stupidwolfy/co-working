@@ -9,8 +9,6 @@ from cow_space.models import Member, SeatBooking
 
 
 @login_required
-@permission_required('cow_space.add_seatbooking')
-@permission_required('cow_space.change_seatbooking')
 @permission_required('cow_space.view_seatbooking')
 @permission_required('cow_space.view_member')
 def index(request):
@@ -30,6 +28,17 @@ def index(request):
 
     return render(request, template_name='cow_space/index.html', context=context)
 
+
+@login_required
+@permission_required('cow_space.add_seatbooking')
+def check_in(request):
+    return render(request, template_name='cow_space/index.html', context=context)
+
+@login_required
+@permission_required('cow_space.change_seatbooking')
+@permission_required('cow_space.change_member')
+def check_out(request):
+    return render(request, template_name='cow_space/index.html', context=context)
 
 @login_required
 @permission_required('cow_space.change_member')
