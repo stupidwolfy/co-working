@@ -2,12 +2,12 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth import authenticate, login, logout
 from django.db.models import Q
+from django.utils import timezone
 
-from cow_space.models import Member, SeatBooking
+from cow_space.models import Member, SeatBooking, TopupLog, Zone
+
 
 # Create your views here.
-
-
 @login_required
 @permission_required('cow_space.view_seatbooking')
 @permission_required('cow_space.view_member')
@@ -25,6 +25,9 @@ def index(request):
             context['seat_log'] = seat_log
         except Member.DoesNotExist:
             context['error'] = 'Member not found!!'
+    
+    zone_type = Zone.zone_type
+    context['zone_type'] = zone_type
 
     return render(request, template_name='cow_space/index.html', context=context)
 
@@ -32,13 +35,41 @@ def index(request):
 @login_required
 @permission_required('cow_space.add_seatbooking')
 def check_in(request):
-    return render(request, template_name='cow_space/index.html', context=context)
+    context = {}
+
+    member_id = request.POST.get('member_id')
+    context['member_id'] = member_id
+    member = Member.objects.get(pk=member_id)
+
+    zone_type = request.POST.get('zone_type')
+    zone = Zone.objects.get(title=zone_type)
+
+    book = SeatBooking.objects.create(
+        member=member,
+        zone=zone,
+        create_by=request.user
+        )
+    
+    book.save()
+
+    #return render(request, template_name='cow_space/index.html', context=context)
+    return redirect('index')
 
 @login_required
 @permission_required('cow_space.change_seatbooking')
 @permission_required('cow_space.change_member')
 def check_out(request):
-    return render(request, template_name='cow_space/index.html', context=context)
+    if request.method = 'POST':
+        member_id = request.POST.get('member_id')
+        context['member_id'] = member_id
+
+        member = Member.objects.get(pk=member_id)
+        book = SeatBooking.objects.filter(member=member, time_out__isnull=True).order_by('time_in').last()
+        if book:
+            book.time_out = timezone.now()
+            book.save()
+
+    return redirect('index')
 
 @login_required
 @permission_required('cow_space.change_member')
@@ -57,8 +88,10 @@ def topup(request):
     if member_id:
         try:
             member = Member.objects.get(pk=member_id)
+            tuplog = TopupLog.objects.filter(member=member).order_by('-topup_date')
             context['member'] = member
             context['member_id'] = member_id
+            context['tuplog'] = tuplog
         except Member.DoesNotExist:
             context['error'] = 'Member not found!!'
     
@@ -68,6 +101,14 @@ def topup(request):
             member.money += add_mon - 20
         else:
             member.money += add_mon
+
+        tuplog = TopupLog.objects.create(
+                member=member,
+                amount=add_mon,
+                topup_by=request.user
+            )
+
+        tuplog.save()
         member.save()
 
     print(member_id)
@@ -144,4 +185,3 @@ def register(request):
             return render(request, template_name='cow_space/index.html', context=context)
 
     return render(request, template_name='cow_space/register.html', context=context)
-

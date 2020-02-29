@@ -9,7 +9,7 @@
     <title>Co-Working Space</title>
 </head>
 
-<body>
+<body class="bg-dark">
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <a class="navbar-brand" href="#">Co|W-space</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
@@ -18,34 +18,47 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav">
-                <li class="nav-item active">
-                    <a class="nav-link" href="{% url 'index' %}">Home</a>
+                {% if perms.cow_space.view_member and perms.cow_space.view_seatbooking %}
+                <li class="nav-item px-1">
+                    {% url 'index' as target_url %}
+                    <a class="nav-link  btn btn-outline-primary {% if request.path == target_url %}active{% endif %}" href="{% url 'index' %}{% if member_id %}?member_id={{member_id}}{% endif %}">Home</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'register' %}">Register</a>
+                {% endif %}
+                {% if perms.cow_space.change_member %}
+                   <li class="nav-item px-1">
+                       {% url 'topup' as target_url %}
+                       <a class="nav-link btn btn-outline-success {% if request.path == target_url %}active{% endif %}" href="{% url 'topup' %}{% if member_id %}?member_id={{member_id}}{% endif %}">Top up</a>
+                   </li>
+                {% endif %}
+                {% if perms.cow_space.add_member %}
+                <li class="nav-item px-1">
+                    {% url 'register' as target_url %}
+                    <a class="nav-link btn btn-outline-danger {% if request.path == target_url %}active{% endif %}" href="{% url 'register' %}">Register</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'topup' %}">Top up</a>
-                </li>
-
+                {% endif %}
                 {% if user.is_authenticated %}
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'logout' %}" onclick="return confirm('Sure?')">Log Out</a>
+                <li class="nav-item px-1">
+                    <a class="nav-link btn btn-outline-warning" href="{% url 'logout' %}" onclick="return confirm('Sure?')">Log Out</a>
                 </li>
-                <li class="nav-item">
+                <li class="nav-item px-1">
                     <a class="nav-link disabled" href="#">Hello, {{ user }}</a>
                 </li>
                 {% else %}
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'login' %}">Log in</a>
+                <li class="nav-item px-1">
+                    <a class="nav-link btn btn-outline-info active" href="{% url 'login' %}">Log in</a>
                 </li>
                 {% endif %}
 
             </ul>
         </div>
     </nav>
+    <br>
     <div class="container-fluid col-11">
+            {% if error %}
+                <div class="alert alert-danger text-center" role="alert">Error: {{error}}</div>
+            {% endif %}
         <div class="row">
+
             {% block content %}
             {% endblock content %}
 
@@ -54,7 +67,4 @@
         </div>
     </div>
 </body>
-<footer>
-</footer>
-
 </html>

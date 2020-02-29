@@ -22,13 +22,14 @@ class SeatBooking(models.Model):
     member = models.ForeignKey(Member, on_delete=models.CASCADE)
     zone = models.ForeignKey(Zone, on_delete=models.CASCADE)
     time_in = models.DateTimeField(auto_now_add=True)
-    time_out = models.DateTimeField(auto_now=True)
-    total_price = models.FloatField(max_length=10)
+    #time_out = models.DateTimeField(auto_now=True)
+    time_out = models.DateTimeField(null = True)
+    total_price = models.FloatField(max_length=10, null = True)
     create_date = models.DateField(auto_now_add=True)
     create_by = models.ForeignKey(User, on_delete=models.CASCADE)
 
 class TopupLog(models.Model):
     member = models.ForeignKey(Member, on_delete=models.CASCADE)
     amount = models.FloatField(max_length=10)
-    topup_date = models.DateField(auto_now=True)
+    topup_date = models.DateTimeField(auto_now=True)
     topup_by = models.ForeignKey(User, on_delete=models.CASCADE)

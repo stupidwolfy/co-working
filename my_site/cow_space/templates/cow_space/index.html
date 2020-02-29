@@ -1,30 +1,39 @@
 {% extends 'base2.html' %}
 {% block content %}
     
-        <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8 text-center p-4">
-            <div class="col bg-primary p-4">Check In
-                <div class="border-top my-2"></div>
-                <div class="col mt-3 bg-light">
+        <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12 text-center p-4">
+            <form class="col card bg-warning p-4" action="{% url 'check_in' %}" method="POST">
+            {% csrf_token %}
+            Check In
+                <div class="border-top my-2 "></div>
+                <div class="col mt-3 form-control bg-light">
                     {% if error %}{{error}}
                     {% else %}ID: {{member_id}}
                     {% endif %}</div>
-                <div class="col mt-3 bg-light"> Zone</div>
+                <select class="col mt-3 form-control bg-light" name="zone_type" id="zone_type"> Zone
+                {% for z, zone in zone_type %}
+                <option value="{{z}}" >{{zone}}</option>
+                {% endfor %}
+                </select>
+                <input type="hidden" name="member_id" value="{% if member_id %}{{member_id}}{% endif %}">
                 <input class="btn btn-success mt-3" type="submit" value="Check In">
-            </div>
-            <div class="col mt-4 p-3 bg-danger">Check Out
+            </form>
+            <form class="col mt-4 p-3 card bg-danger" action="{% url 'check_out' %}" method="POST">
+            {% csrf_token %}
+            Check Out
                 <div class="border-top my-2"></div>
-                <div class="col mt-3 bg-light">
+                <div class="col mt-3 form-control bg-light">
                     {% if error %}{{error}}
                     {% else %}ID: {{member_id}}
                     {% endif %}</div>
-                <div class="col mt-3 bg-light">
+                <div class="col mt-3 form-control bg-light">
                     {% if member %}Money left: {{member.money}} ฿
                     {% else %}Money
                     {% endif %}
                 </div>
-                <input class="btn btn-primary" style="margin-top:20px" type="submit" value="Check Out">
-            </div>
+                <input type="hidden" name="member_id" value="{% if member_id %}{{member_id}}{% endif %}">
+                <input class="btn mt-3 btn-primary" type="submit" value="Check Out">
+            </form>
         </div>
-
 
 {% endblock content %}

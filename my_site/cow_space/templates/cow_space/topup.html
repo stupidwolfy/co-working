@@ -2,7 +2,7 @@
 {% block content %}
 
 <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8 text-center">
-    <div class="col bg-primary p-3">Add money
+    <div class="col bg-danger p-3">Add money
         <div class="border-top my-2"></div>
         <div class="col form-control mt-3 bg-light">
             {% if error %}{{error}}
@@ -16,11 +16,11 @@
         <form action="{% url 'topup' %}" method="POST">
         {% csrf_token %}
             <input type="hidden" name="member_id" value="{% if member_id %}{{member_id}}{% endif %}">
-            <button class="btn btn-success mt-3" type="submit" name="add_mon" value="20">+20฿</button>
+            <button class="btn btn-primary mt-3" type="submit" name="add_mon" value="20">+20฿</button>
             <button class="btn btn-light mt-3" type="submit" name="add_mon" value="50">+50฿</button>
             <button class="btn btn-warning mt-3" type="submit" name="add_mon" value="100">+100฿</button>
             <button class="btn btn-info mt-3" type="submit" name="add_mon" value="500">+500฿</button>
-            <button class="btn btn-danger mt-3" type="submit" name="add_mon" value="1000">+1000฿</button>
+            <button class="btn btn-success mt-3" type="submit" name="add_mon" value="1000">+1000฿</button>
         </form>
     </div>
 </div>
