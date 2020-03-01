@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 {% load static %}
+{% load tz %} 
+{% timezone "Asia/Bangkok" %}
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -53,9 +54,12 @@
         </div>
     </nav>
     <br>
-    <div class="container-fluid col-11">
+    <div class="container-fluid col-11 h-100">
             {% if error %}
                 <div class="alert alert-danger text-center" role="alert">Error: {{error}}</div>
+            {% endif %}
+            {% if success %}
+                <div class="alert alert-success text-center" role="alert">OK: {{success}}</div>
             {% endif %}
         <div class="row">
 
@@ -68,3 +72,4 @@
     </div>
 </body>
 </html>
+{% endtimezone %}

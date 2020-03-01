@@ -4,23 +4,27 @@ from django.contrib.auth import authenticate, login, logout
 from django.db.models import Q
 from django.utils import timezone
 
+from datetime import datetime
+
 from cow_space.models import Member, SeatBooking, TopupLog, Zone
+import math
 
-
-# Create your views here.
-@login_required
-@permission_required('cow_space.view_seatbooking')
-@permission_required('cow_space.view_member')
-def index(request):
+##custom function
+def search_tab(request):
     context = {}
 
-    member_id = request.GET.get('member_id')
+    if request.method == "GET":
+        member_id = request.GET.get('member_id')
+    elif request.method == "POST":
+        member_id = request.POST.get('member_id')
+
     context['member_id'] = member_id
 
+    member = None
     if member_id:
         try:
             member = Member.objects.get(pk=member_id)
-            seat_log = SeatBooking.objects.filter(member=member.pk)
+            seat_log = SeatBooking.objects.filter(member=member.pk).order_by('-time_in')
             context['member'] = member
             context['seat_log'] = seat_log
         except Member.DoesNotExist:
@@ -29,47 +33,79 @@ def index(request):
     zone_type = Zone.zone_type
     context['zone_type'] = zone_type
 
-    return render(request, template_name='cow_space/index.html', context=context)
+    return context, member_id, member
+
+
+# Create your views here.
+@login_required
+@permission_required('cow_space.view_seatbooking')
+@permission_required('cow_space.view_member')
+def index(request):
+    context, member_id, member = search_tab(request)
+
+    return render(request, 'cow_space/index.html', context=context)
 
 
 @login_required
 @permission_required('cow_space.add_seatbooking')
 def check_in(request):
-    context = {}
+    context, member_id, member = search_tab(request)
+    context['redirect_to'] = 'index'
 
-    member_id = request.POST.get('member_id')
-    context['member_id'] = member_id
-    member = Member.objects.get(pk=member_id)
+    if member:
+        book = SeatBooking.objects.filter(member=member, time_out__isnull=True).order_by('time_in').last()
 
-    zone_type = request.POST.get('zone_type')
-    zone = Zone.objects.get(title=zone_type)
+        if not book:
+            zone_type = request.POST.get('zone_type')
+            zone = Zone.objects.get(title=zone_type)
 
-    book = SeatBooking.objects.create(
-        member=member,
-        zone=zone,
-        create_by=request.user
-        )
-    
-    book.save()
+            if member.money >= zone.price:
+                book = SeatBooking.objects.create(
+                member=member,
+                zone=zone,
+                create_by=request.user
+                )
+                book.save()
+                context['success'] = "Checked In."
+            else:
+                context['error'] = "Not enougth money!"
+            
+        else:
+            context['error'] = "Member didn't checked out!"
 
-    #return render(request, template_name='cow_space/index.html', context=context)
-    return redirect('index')
+    else:
+        context['error'] = 'Need Member ID!!'
+
+    return render(request, 'cow_space/index.html', context=context)
+    #return redirect('index')
 
 @login_required
 @permission_required('cow_space.change_seatbooking')
 @permission_required('cow_space.change_member')
 def check_out(request):
-    if request.method = 'POST':
-        member_id = request.POST.get('member_id')
-        context['member_id'] = member_id
+    context, member_id, member = search_tab(request)
+    context['redirect_to'] = 'index' 
 
-        member = Member.objects.get(pk=member_id)
+    if member:
         book = SeatBooking.objects.filter(member=member, time_out__isnull=True).order_by('time_in').last()
+
         if book:
             book.time_out = timezone.now()
-            book.save()
+            price = book.zone.price * math.ceil((book.time_out  - book.time_in).seconds/3600)
+            member.money -= price
 
-    return redirect('index')
+            book.total_price = price
+            book.save()
+            member.save()
+            context['success'] = "Checked Out."
+        else:
+            context['error'] = "Member didn't checked in!"
+    
+    else:
+        context['error'] = 'Need Member ID!!'
+
+    return render(request, 'cow_space/index.html', context=context)
+    #return redirect('index')
 
 @login_required
 @permission_required('cow_space.change_member')
@@ -88,16 +124,15 @@ def topup(request):
     if member_id:
         try:
             member = Member.objects.get(pk=member_id)
-            tuplog = TopupLog.objects.filter(member=member).order_by('-topup_date')
+            tup_log = TopupLog.objects.filter(member=member).order_by('-topup_date')
             context['member'] = member
             context['member_id'] = member_id
-            context['tuplog'] = tuplog
+            context['tup_log'] = tup_log
         except Member.DoesNotExist:
             context['error'] = 'Member not found!!'
     
     if add_mon:
-        mon = member.money
-        if mon < -40:
+        if member.money < -40:
             member.money += add_mon - 20
         else:
             member.money += add_mon
@@ -142,32 +177,14 @@ def cow_logout(request):
 
 
 @login_required
-def change_pwd(request):
-    context = {}
-
-    if request.method == 'POST':
-        user = request.user
-        pwd1 = request.POST.get('pwd1')
-        pwd2 = request.POST.get('pwd2')
-
-        if pwd1 == pwd2:
-            user.set_password(pwd1)
-            context['red'] = 'Password not matched!'
-        else:
-            context['green'] = 'Password changed.'
-
-    return render(request, template_name='change_pwd.html', context=context)
-
-
-@login_required
 @permission_required('cow_space.add_member')
 def register(request):
     context = {}
+    context['redirect_to'] = 'index' 
 
     if request.method == 'POST':
         fname = request.POST.get('fname')
         lname = request.POST.get('lname')
-        #mon = request.POST.get('mon')
 
         # Check if database had this member
         try:
@@ -182,6 +199,7 @@ def register(request):
             )
             context['member_id'] = member.pk
             member.save()
-            return render(request, template_name='cow_space/index.html', context=context)
+            context['success'] = "Register compleated! Id: " +str(member.pk)
+            return render(request, template_name='cow_space/register.html', context=context)
 
     return render(request, template_name='cow_space/register.html', context=context)

@@ -1,39 +1,39 @@
 {% extends 'base2.html' %}
 {% block content %}
-    
-        <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12 text-center p-4">
-            <form class="col card bg-warning p-4" action="{% url 'check_in' %}" method="POST">
-            {% csrf_token %}
-            Check In
-                <div class="border-top my-2 "></div>
-                <div class="col mt-3 form-control bg-light">
-                    {% if error %}{{error}}
-                    {% else %}ID: {{member_id}}
-                    {% endif %}</div>
-                <select class="col mt-3 form-control bg-light" name="zone_type" id="zone_type"> Zone
-                {% for z, zone in zone_type %}
-                <option value="{{z}}" >{{zone}}</option>
-                {% endfor %}
-                </select>
-                <input type="hidden" name="member_id" value="{% if member_id %}{{member_id}}{% endif %}">
-                <input class="btn btn-success mt-3" type="submit" value="Check In">
-            </form>
-            <form class="col mt-4 p-3 card bg-danger" action="{% url 'check_out' %}" method="POST">
-            {% csrf_token %}
-            Check Out
-                <div class="border-top my-2"></div>
-                <div class="col mt-3 form-control bg-light">
-                    {% if error %}{{error}}
-                    {% else %}ID: {{member_id}}
-                    {% endif %}</div>
-                <div class="col mt-3 form-control bg-light">
-                    {% if member %}Money left: {{member.money}} ฿
-                    {% else %}Money
-                    {% endif %}
-                </div>
-                <input type="hidden" name="member_id" value="{% if member_id %}{{member_id}}{% endif %}">
-                <input class="btn mt-3 btn-primary" type="submit" value="Check Out">
-            </form>
-        </div>
-
+        {% if perms.cow_space.add_seatbooking %}
+            <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12 text-center p-4">
+                <form class="col card bg-warning p-4" action="{% url 'check_in' %}" method="POST">
+                {% csrf_token %}
+                Check In
+                    <div class="border-top my-2 "></div>
+                    <div class="col mt-3 form-control bg-light">
+                        ID: {% if member %}{{member_id}} | {{member.first_name}}  {{member.last_name}}
+                        {% endif %}
+                    </div>
+                    <select class="col mt-3 form-control bg-light" name="zone_type" id="zone_type"> Zone
+                    {% for z, zone in zone_type %}
+                    <option value="{{z}}" >{{zone}}</option>
+                    {% endfor %}
+                    </select>
+                    <input type="hidden" name="member_id" value="{% if member_id %}{{member_id}}{% endif %}">
+                    <input class="btn btn-success mt-3" type="submit" value="Check In">
+                </form>
+                <form class="col mt-4 p-3 card bg-danger" action="{% url 'check_out' %}" method="POST">
+                {% csrf_token %}
+                Check Out
+                    <div class="border-top my-2"></div>
+                    <div class="col mt-3 form-control bg-light">
+                        ID: {% if member %}{{member_id}} | {{member.first_name}}  {{member.last_name}}
+                        {% endif %}
+                    </div>
+                    <div class="col mt-3 form-control bg-light">
+                        {% if member %}Money left: {{member.money}} ฿
+                        {% else %}Money
+                        {% endif %}
+                    </div>
+                    <input type="hidden" name="member_id" value="{% if member_id %}{{member_id}}{% endif %}">
+                    <input class="btn mt-3 btn-primary" type="submit" value="Check Out">
+                </form>
+            </div>
+        {% endif %}
 {% endblock content %}

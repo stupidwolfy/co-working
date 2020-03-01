@@ -5,9 +5,9 @@
     <div class="col bg-danger p-3">Add money
         <div class="border-top my-2"></div>
         <div class="col form-control mt-3 bg-light">
-            {% if error %}{{error}}
-            {% else %}ID: {{member_id}}
-            {% endif %}</div>
+            ID: {% if member %}{{member_id}} | {{member.first_name}}  {{member.last_name}}
+                       {% endif %}
+        </div>
         <div class="col form-control mt-3 bg-light">
             {% if member %}Money left: {{member.money}} ฿
             {% else %}Money left

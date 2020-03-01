@@ -1,8 +1,11 @@
 {% extends 'base.html' %}
 {% block sidebar %}
-<div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 card text-center p-4 bg-success">Search
+<div class="col-lg col-md col-sm col-xs card text-center p-4 bg-success">Search
     <div class="border-top my-2"></div>
-    <form class="row mt-3" action="{{request.path}}" method="GET">
+    <form class="row mt-3" action="{% if redirect_to %} {% url redirect_to %}
+                                   {% else %}{{request.path}}
+                                   {% endif %}
+                                  " method="GET">
         <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12">
             <input class="form-control text-center" type="text" pattern="\d*" name="member_id" id="member_id" placeholder="Member ID"
                 value="{% if member_id %}{{member_id}}{% endif %}"  required>
@@ -13,19 +16,34 @@
     </form>
     <div class="row">
         <label class="col form-control text-center mt-3">
-            {% if member %}Balance: {{member.money}} ฿
-            {% else %}Money
-            {% endif %}
+            Balance: {% if member %}{{member.money}}
+            {% else %}????
+            {% endif %}฿
         </label>
     </div>
     <div class="row h-100">
-        <label class="col form-control text-center mt-3 overflow-auto">
-            {% if tuplog %}
-                {% for log in tuplog %}
-                <p>{{log.topup_date}} | {{log.amount}} | {{log.topup_by}}</p>
+        <label class="col form-control text-center mt-3 h-100 overflow-auto">
+            {% if tup_log %}
+                {% for log in tup_log %}
+                    <p>{{log.topup_date}} | {{log.amount}} ฿ | {{log.topup_by}}</p>
                 {% endfor %}
-            {% else %}log
-            {% endif %}</label>
+            {% elif seat_log %}
+                {% for log in seat_log %}
+                    <p>
+                        {{log.create_date}}
+                        |{% if log.total_price %}{{log.total_price}}
+                        {% else %} ???
+                        {% endif %}  ฿ 
+                        | In:{{log.time_in|time}}  
+                        | Out:{% if log.time_out %}{{log.time_out|time}}
+                        {% else %} ???
+                        {% endif %}
+                        | {{log.zone.title}}
+                    </p>
+                {% endfor %}
+            {% else %}----log----
+            {% endif %}
+            </label>
     </div>
 </div>
 {% endblock sidebar %}
