@@ -93,8 +93,10 @@ def check_out(request):
             book.time_out = timezone.now()
             price = book.zone.price * math.ceil((book.time_out  - book.time_in).seconds/3600)
             member.money -= price
-
             book.total_price = price
+
+            #print(price)
+            
             book.save()
             member.save()
             context['success'] = "Checked Out."
@@ -130,23 +132,25 @@ def topup(request):
             context['tup_log'] = tup_log
         except Member.DoesNotExist:
             context['error'] = 'Member not found!!'
+            context['member_id'] = None
+            return render(request, template_name='cow_space/topup.html', context=context)
     
-    if add_mon:
-        if member.money < -40:
-            member.money += add_mon - 20
-        else:
-            member.money += add_mon
+        if add_mon:
+            if member.money < -40:
+                member.money += add_mon - 20
+            else:
+                member.money += add_mon
+    
+            tuplog = TopupLog.objects.create(
+                    member=member,
+                    amount=add_mon,
+                    topup_by=request.user
+                )
+    
+            tuplog.save()
+            member.save()
 
-        tuplog = TopupLog.objects.create(
-                member=member,
-                amount=add_mon,
-                topup_by=request.user
-            )
-
-        tuplog.save()
-        member.save()
-
-    print(member_id)
+    #print(member_id)
     return render(request, template_name='cow_space/topup.html', context=context)
 
 

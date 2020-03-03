@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% block sidebar %}
-<div class="col-lg col-md col-sm col-xs card text-center p-4 bg-success">Search
+<div class="col-lg-4 col-md-6 col-sm-12 col-12 col-xs-12 card text-center p-4 bg-success sbar my-3">Search
     <div class="border-top my-2"></div>
     <form class="row mt-3" action="{% if redirect_to %} {% url redirect_to %}
                                    {% else %}{{request.path}}
@@ -21,29 +21,29 @@
             {% endif %}฿
         </label>
     </div>
-    <div class="row h-100">
-        <label class="col form-control text-center mt-3 h-100 overflow-auto">
+    <div class="row flex-fill">
+        <select  multiple class="col form-control mt-3 overflow-auto">
             {% if tup_log %}
                 {% for log in tup_log %}
-                    <p>{{log.topup_date}} | {{log.amount}} ฿ | {{log.topup_by}}</p>
+                    <option>{{log.topup_date|date:'d/M/Y [H:i]'}} | {{log.amount}} ฿ | {{log.topup_by}}</option>
                 {% endfor %}
             {% elif seat_log %}
                 {% for log in seat_log %}
-                    <p>
-                        {{log.create_date}}
+                    <option>
+                        {{log.create_date|date:'d/M/Y'}}
                         |{% if log.total_price %}{{log.total_price}}
-                        {% else %} ???
+                        {% else %} 0
                         {% endif %}  ฿ 
                         | In:{{log.time_in|time}}  
                         | Out:{% if log.time_out %}{{log.time_out|time}}
                         {% else %} ???
                         {% endif %}
                         | {{log.zone.title}}
-                    </p>
+                    </option>
                 {% endfor %}
             {% else %}----log----
             {% endif %}
-            </label>
+            </select >
     </div>
 </div>
 {% endblock sidebar %}

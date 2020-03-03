@@ -7,10 +7,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.css' %}">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <title>Co-Working Space</title>
 </head>
 
-<body class="bg-dark">
+<body>
+<div class="container-fluid h-100 col bg-dark">
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <a class="navbar-brand" href="#">Co|W-space</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
@@ -53,8 +55,9 @@
             </ul>
         </div>
     </nav>
-    <br>
-    <div class="container-fluid col-11 h-100">
+<br>
+    <div class="row-fluid col">
+    <div class="col-lg col-md col-sm col-xs">
             {% if error %}
                 <div class="alert alert-danger text-center" role="alert">Error: {{error}}</div>
             {% endif %}
@@ -70,6 +73,8 @@
             {% endblock sidebar %}
         </div>
     </div>
+    </div>
+</div>
 </body>
 </html>
 {% endtimezone %}
