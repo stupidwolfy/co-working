@@ -4,7 +4,7 @@
             <div class="col-lg-8 col-md-6 col-sm-12 col-12 col-xs-12 text-center p-4">
                 <form class="col card bg-warning p-4" action="{% url 'check_in' %}" method="POST">
                 {% csrf_token %}
-                Check In
+                <h4>Check In</h4>
                     <div class="border-top my-2 "></div>
                     <div class="col mt-3 form-control bg-light">
                         ID: {% if member %}{{member_id}} | {{member.first_name}}  {{member.last_name}}
@@ -20,7 +20,7 @@
                 </form>
                 <form class="col mt-4 p-3 card bg-danger" action="{% url 'check_out' %}" method="POST">
                 {% csrf_token %}
-                Check Out
+                <h4>Check Out</h4>
                     <div class="border-top my-2"></div>
                     <div class="col mt-3 form-control bg-light">
                         ID: {% if member %}{{member_id}} | {{member.first_name}}  {{member.last_name}}

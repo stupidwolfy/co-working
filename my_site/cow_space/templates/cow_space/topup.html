@@ -2,7 +2,7 @@
 {% block content %}
 
 <div class="col-lg-8 col-md-6 col-sm-12 col-xs-12 text-center p-4">
-    <div class="col card bg-danger p-3">Add money
+    <div class="col card bg-danger p-3"><h4>Add money</h4>
         <div class="border-top my-2"></div>
         <div class="col form-control mt-3 bg-light">
             ID: {% if member %}{{member_id}} | {{member.first_name}}  {{member.last_name}}
@@ -16,11 +16,11 @@
         <form action="{% url 'topup' %}" method="POST">
         {% csrf_token %}
             <input type="hidden" name="member_id" value="{% if member_id %}{{member_id}}{% endif %}">
-            <button class="btn btn-primary mt-3 " {% if not member_id %}disabled{% endif %} type="submit" name="add_mon" value="20">+20฿</button>
-            <button class="btn btn-light mt-3" {% if not member_id %}disabled{% endif %} type="submit" name="add_mon" value="50">+50฿</button>
-            <button class="btn btn-warning mt-3" {% if not member_id %}disabled{% endif %} type="submit" name="add_mon" value="100">+100฿</button>
-            <button class="btn btn-info mt-3" {% if not member_id %}disabled{% endif %} type="submit" name="add_mon" value="500">+500฿</button>
-            <button class="btn btn-success mt-3" {% if not member_id %}disabled{% endif %} type="submit" name="add_mon" value="1000">+1000฿</button>
+            <button class="btn btn-primary mt-3 " {% if not member_id %}disabled{% endif %} type="submit" name="add_mon" value="20"><h5>+20฿</h5></button>
+            <button class="btn btn-light mt-3" {% if not member_id %}disabled{% endif %} type="submit" name="add_mon" value="50"><h5>+50฿</h5></button>
+            <button class="btn btn-warning mt-3" {% if not member_id %}disabled{% endif %} type="submit" name="add_mon" value="100"><h5>+100฿</h5></button>
+            <button class="btn btn-info mt-3" {% if not member_id %}disabled{% endif %} type="submit" name="add_mon" value="500"><h5>+500฿</h5></button>
+            <button class="btn btn-success mt-3" {% if not member_id %}disabled{% endif %} type="submit" name="add_mon" value="1000"><h5>+1000฿</h5></button>
         </form>
     </div>
 </div>

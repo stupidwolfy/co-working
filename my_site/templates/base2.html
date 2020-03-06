@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% block sidebar %}
-<div class="col-lg-4 col-md-6 col-sm-12 col-12 col-xs-12 card text-center p-4 bg-success sbar my-3">Search
+<div class="col-lg-4 col-md-6 col-sm-12 col-12 col-xs-12 card text-center p-4 bg-success sbar my-3"><h4>Search</h4>
     <div class="border-top my-2"></div>
     <form class="row mt-3" action="{% if redirect_to %} {% url redirect_to %}
                                    {% else %}{{request.path}}

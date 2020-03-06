@@ -1,7 +1,4 @@
-<!DOCTYPE html>
-{% load static %}
-{% load tz %}
-{% timezone "Asia/Bangkok" %}
+<!DOCTYPE html> {% load static %} {% load tz %} {% timezone "Asia/Bangkok" %}
 <html lang="en">
 
 <head>
@@ -16,36 +13,33 @@
 <body>
     <div class="container-fluid  min-vh-100 col bg-dark">
         {% if error %}
-            <div class="toast bg-light w-25 text-center" data-delay="2000">
-                <div class="toast-header bg-danger text-white">
-                    <strong class="mr-auto ">Error</strong>
-                    <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
-                    </button>
-                </div>
-                <div class="toast-body">
-                    {{error}}
-                </div>
+        <div class="toast bg-light w-25 text-center" data-delay="2000">
+            <div class="toast-header bg-danger text-white">
+                <h5><strong class="mr-auto ">Error</strong></h5>
+                <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+                </button>
             </div>
+            <div class="toast-body">
+                <h6>{{error}}</h6>
+            </div>
+        </div>
+        {% endif %} {% if success %}
+        <div class="toast bg-light w-25 text-center" data-delay="2000">
+            <div class="toast-header bg-success text-white">
+                <strong class="mr-auto ">Success</strong>
+                <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+                </button>
+            </div>
+            <div class="toast-body">
+                {{success}}
+            </div>
+        </div>
         {% endif %}
 
-        {% if success %}
-            <div class="toast bg-light w-25 text-center" data-delay="2000">
-                <div class="toast-header bg-success text-white">
-                    <strong class="mr-auto ">Success</strong>
-                    <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
-                    </button>
-                </div>
-                <div class="toast-body">
-                    {{success}}
-                </div>
-            </div>
-        {% endif %}
-
-        <nav class="navbar  navbar-expand-lg navbar-light bg-light rounded-bottom">
-            <a class="navbar-brand" href="#"><img class="img-fluid" width="50" src="{% static 'favicon.png' %}" alt="">
-                Co|W-space</a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
-                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <nav class="navbar navbar-expand-lg navbar-expand-md navbar-light bg-light rounded-bottom fixed-top">
+            <a class="navbar-brand" href="#"><img class="img-fluid" width="50" src="{% static 'favicon.png' %}" alt=""> Co|W-space
+            </a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
@@ -53,29 +47,23 @@
                     {% if perms.cow_space.view_member and perms.cow_space.view_seatbooking %}
                     <li class="nav-item p-1">
                         {% url 'index' as target_url %}
-                        <a class="nav-link  btn btn-outline-primary {% if request.path == target_url %}active{% endif %}"
-                            href="{% url 'index' %}{% if member_id %}?member_id={{member_id}}{% endif %}">Home</a>
+                        <a class="nav-link  btn btn-outline-primary {% if request.path == target_url %}active{% endif %}" href="{% url 'index' %}{% if member_id %}?member_id={{member_id}}{% endif %}">Home</a>
                     </li>
-                    {% endif %}
-                    {% if perms.cow_space.change_member %}
+                    {% endif %} {% if perms.cow_space.change_member %}
                     <li class="nav-item p-1">
                         {% url 'topup' as target_url %}
-                        <a class="nav-link btn btn-outline-success {% if request.path == target_url %}active{% endif %}"
-                            href="{% url 'topup' %}{% if member_id %}?member_id={{member_id}}{% endif %}">Top up</a>
+                        <a class="nav-link btn btn-outline-success {% if request.path == target_url %}active{% endif %}" href="{% url 'topup' %}{% if member_id %}?member_id={{member_id}}{% endif %}">Top up</a>
                     </li>
-                    {% endif %}
-                    {% if perms.cow_space.add_member %}
+                    {% endif %} {% if perms.cow_space.add_member %}
                     <li class="nav-item p-1">
                         {% url 'register' as target_url %}
-                        <a class="nav-link btn btn-outline-danger {% if request.path == target_url %}active{% endif %}"
-                            href="{% url 'register' %}">Register</a>
+                        <a class="nav-link btn btn-outline-danger {% if request.path == target_url %}active{% endif %}" href="{% url 'register' %}">Register</a>
                     </li>
-                    {% endif %}
-                    {% if user.is_authenticated %}
+                    {% endif %} {% if user.is_authenticated %}
                     <li class="nav-item p-1">
                         <!-- Button trigger modal -->
                         <a type="button" class="nav-link btn btn-outline-warning" data-toggle="modal" data-target="#logoutModal">
-                          Log Out
+                            Log Out
                         </a>
                     </li>
                     <li class="nav-item p-1">
@@ -93,12 +81,10 @@
         <br>
         <div class="row-fluid col">
             <div class="col-lg col-md col-sm col-xs">
-                <div class="row">
-                    {% block content %}
-                    {% endblock content %}
+                <div class="row pt-5">
+                    {% block content %} {% endblock content %} 
 
-                    {% block sidebar %}
-                    {% endblock sidebar %}
+                    {% block sidebar %} {% endblock sidebar %}
                 </div>
             </div>
         </div>
@@ -111,23 +97,23 @@
         $('.toast').toast('show')
     </script>
 
-<!-- Modal -->
-<div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="logoutModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="logoutModalLabel">Log Out?</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancle</button>
-        <a type="button" class="btn btn-primary" href="{% url 'logout' %}">Confirm</a>
-      </div>
+    <!-- Modal -->
+    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="logoutModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="logoutModalLabel">Log Out?</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancle</button>
+                    <a type="button" class="btn btn-primary" href="{% url 'logout' %}">Confirm</a>
+                </div>
+            </div>
+        </div>
     </div>
-  </div>
-</div>
 
 </body>
 
