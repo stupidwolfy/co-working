@@ -1,11 +1,14 @@
-<!DOCTYPE html> {% load static %} {% load tz %} {% timezone "Asia/Bangkok" %}
-<html lang="en">
 
+{% load static %} 
+{% load tz %} 
+{% timezone "Asia/Bangkok" %}
+<!DOCTYPE html> 
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.min.css' %}">
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
     <link rel="shortcut icon" href="{% static 'favicon.ico' %}" type="image/x-icon">
     <title>Co-Working Space</title>
 </head>
@@ -26,12 +29,12 @@
         {% endif %} {% if success %}
         <div class="toast bg-light w-25 text-center" data-delay="2000">
             <div class="toast-header bg-success text-white">
-                <strong class="mr-auto ">Success</strong>
+                <h5><strong class="mr-auto ">Success</strong></h5>
                 <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
                 </button>
             </div>
             <div class="toast-body">
-                {{success}}
+                <h6>{{success}}</h6>
             </div>
         </div>
         {% endif %}
@@ -49,7 +52,7 @@
                         {% url 'index' as target_url %}
                         <a class="nav-link  btn btn-outline-primary {% if request.path == target_url %}active{% endif %}" href="{% url 'index' %}{% if member_id %}?member_id={{member_id}}{% endif %}">Home</a>
                     </li>
-                    {% endif %} {% if perms.cow_space.change_member %}
+                    {% endif %} {% if perms.cow_space.add_topuplog %}
                     <li class="nav-item p-1">
                         {% url 'topup' as target_url %}
                         <a class="nav-link btn btn-outline-success {% if request.path == target_url %}active{% endif %}" href="{% url 'topup' %}{% if member_id %}?member_id={{member_id}}{% endif %}">Top up</a>

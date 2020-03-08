@@ -30,6 +30,10 @@ def search_tab(request):
             context['seat_log'] = seat_log
         except Member.DoesNotExist:
             context['error'] = 'Member not found!!'
+            context['member_id'] = ''
+        except ValueError:
+            context['error'] = 'Wrong Member ID!!'
+            context['member_id'] = ""
 
     zone_type = Zone.zone_type
     context['zone_type'] = zone_type
@@ -117,6 +121,7 @@ def check_out(request):
 
 @login_required
 @permission_required('cow_space.change_member')
+@permission_required('cow_space.add_topuplog')
 def topup(request):
     context = {}
     add_mon = None
@@ -141,6 +146,8 @@ def topup(request):
             context['error'] = 'Member not found!!'
             context['member_id'] = None
             return render(request, template_name='cow_space/topup.html', context=context)
+        except Member.ValueError:
+            context['error'] = 'Wrong Member ID!!'
 
         if add_mon:
             context['success'] = ""
@@ -213,6 +220,7 @@ def register(request):
                     check_mem.pk) + ")"
                 context['fname'] = fname
                 context['lname'] = lname
+                context['member_id'] = check_mem.pk
 
             except Member.DoesNotExist:
                 member = Member.objects.create(

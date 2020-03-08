@@ -1,7 +1,7 @@
 {% extends 'base2.html' %}
 {% block content %}
         {% if perms.cow_space.add_seatbooking %}
-            <div class="col-lg-8 col-md-6 col-sm-12 col-12 col-xs-12 text-center p-4">
+            <div class="col-lg-7 col-md-6 col-sm-12 col-12 col-xs-12 text-center p-4">
                 <form class="col card bg-warning p-4" action="{% url 'check_in' %}" method="POST">
                 {% csrf_token %}
                 <h4>Check In</h4>
@@ -12,7 +12,7 @@
                     </div>
                     <select class="col mt-3 form-control bg-light" name="zone_type" id="zone_type"> Zone
                     {% for z, zone in zone_type %}
-                    <option value="{{z}}" >{{zone}}</option>
+                    <option value="{{z}}" >{{zone}} [{{z}}]</option>
                     {% endfor %}
                     </select>
                     <input type="hidden" name="member_id" value="{% if member_id %}{{member_id}}{% endif %}">

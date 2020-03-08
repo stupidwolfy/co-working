@@ -1,14 +1,13 @@
-{% extends 'base.html' %}
-{% block sidebar %}
-<div class="col-lg-4 col-md-6 col-sm-12 col-12 col-xs-12 card text-center p-4 bg-success sbar my-3"><h4>Search</h4>
+{% extends 'base.html' %} {% block sidebar %}
+<div class="col-lg col-md col-sm-12 col-12 col-xs-12 card text-center p-4 bg-success sbar my-3">
+    <h4>Search</h4>
     <div class="border-top my-2"></div>
     <form class="row mt-3" action="{% if redirect_to %} {% url redirect_to %}
                                    {% else %}{{request.path}}
                                    {% endif %}
                                   " method="GET">
         <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12">
-            <input class="form-control text-center" type="text" pattern="\d*" name="member_id" id="member_id" placeholder="Member ID"
-                value="{% if member_id %}{{member_id}}{% endif %}"  required>
+            <input class="form-control text-center" type="text" pattern="\d*" name="member_id" id="member_id" placeholder="Member ID" value="{% if member_id %}{{member_id}}{% endif %}" required>
         </div>
         <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
             <input class="btn btn-primary" type="submit" value="Search">
@@ -21,29 +20,49 @@
             {% endif %}฿
         </label>
     </div>
-    <div class="row flex-fill">
-        <select  multiple class="col form-control mt-3 overflow-auto">
-            {% if tup_log %}
-                {% for log in tup_log %}
-                    <option>{{log.topup_date|date:'d/M/Y [H:i]'}} | {{log.amount}} ฿ | {{log.topup_by}}</option>
-                {% endfor %}
-            {% elif seat_log %}
-                {% for log in seat_log %}
-                    <option>
-                        {{log.create_date|date:'d/M/Y'}}
-                        |{% if log.total_price %}{{log.total_price}}
-                        {% else %} 0
-                        {% endif %}  ฿ 
-                        | In:{{log.time_in|time}}  
-                        | Out:{% if log.time_out %}{{log.time_out|time}}
-                        {% else %} ???
-                        {% endif %}
-                        | {{log.zone.title}}
-                    </option>
-                {% endfor %}
-            {% else %}----log----
-            {% endif %}
-            </select >
+    <div class="col table-responsive form-control">
+        <table class="table table-hover table-light ">
+            <thead>
+                {% if seat_log %}
+                    <tr>
+                        <th scope="col">Create Date</th>
+                        <th scope="col">Total</th>
+                        <th scope="col">Check In</th>
+                        <th scope="col">Check Out</th>
+                        <th scope="col">Zone</th>
+                    </tr>
+                {% elif tup_log %}
+                    <tr>
+                        <th scope="col">Topup Date [Time]</th>
+                        <th scope="col">Amount</th>
+                        <th scope="col">Topup by</th>
+                    </tr>
+                {% endif %}
+            </thead>
+            <tbody>
+                {% if seat_log %} 
+                    {% for log in seat_log %}
+                        <tr>
+                            <th scope="row">{{log.create_date|date:'d/M/Y'}}</th>
+                            <td>{% if log.total_price %}{{log.total_price}} {% else %} 0 {% endif %} ฿
+                            </td>
+                            <td>{{log.time_in|time}}</td>
+                            <td>{% if log.time_out %}{{log.time_out|time}} {% else %} ??? {% endif %}
+                            </td>
+                            <td>{{log.zone.title}}</td>
+                        </tr>
+                    {% endfor %} 
+                {% elif tup_log %} 
+                    {% for log in tup_log %}
+                        <tr>
+                            <th scope="row">{{log.topup_date|date:'d/M/Y [H:i]'}}</th>
+                            <td>{{log.amount}}฿</td>
+                            <td>{{log.topup_by}}</td>
+                        </tr>
+                    {% endfor %}
+                {% endif %}
+            </tbody>
+        </table>
     </div>
 </div>
 {% endblock sidebar %}

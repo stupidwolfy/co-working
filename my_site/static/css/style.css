@@ -8,3 +8,17 @@
     right: 2%;
     z-index: 2000;
 }
+
+thead {
+    background: white;
+    position: sticky;
+    top: -5%;
+}
+
+* {
+    scrollbar-width: none;
+}
+
+::-webkit-scrollbar {
+    display: none;
+}
